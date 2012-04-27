@@ -117,8 +117,13 @@ class fsrValidation : public edm::EDAnalyzer {
       TH2F * h_ptRecoPtGenVsPtGenG2;
       TH2F * h_ptRecoPtGenVsPtGenG3;
       TH2F * h_ptRecoPtGenVsPtGenG4;
-      TH1F * h_sumPtGammaDr03;
-      TH1F * h_sumPtGammaDr04;
+      TH1F * h_sumPtGammaDr05;
+      TH1F * h_sumPtGammaDr06;
+      TH1F * h_sumPtGammaDr07;
+      TH1F * h_sumPtGammaDr08;
+      TH1F * h_sumPtGammaDr09;
+      TH1F * h_sumPtGammaDr10;
+      TH1F * h_sumPtGammaDr11;
      
 };
 
@@ -147,22 +152,27 @@ fsrValidation::fsrValidation(const edm::ParameterSet& conf)
   h_ptReco = fs->make<TH1F>("h_ptReco","ptReco",200,0,200);
   h_ptGen = fs->make<TH1F>("h_ptGen","ptGen",200,0,200);
   h_ptGen3 = fs->make<TH1F>("h_ptGen3","ptGen3",200,0,200);
-  h_ptGen13 = fs->make<TH1F>("h_ptGen13","ptGen1diff3",200,0,50);
-  h_sumPtGamma = fs->make<TH1F>("h_sumPtGamma","sumPtGamma",200,0,50);
+  h_ptGen13 = fs->make<TH1F>("h_ptGen13","ptGen1diff3",1000,0,50);
+  h_sumPtGamma = fs->make<TH1F>("h_sumPtGamma","sumPtGamma",1000,0,50);
   h_ptRecoG1 = fs->make<TH1F>("h_ptRecoG1","ptRecoG1",200,0,200);
   h_ptRecoG2 = fs->make<TH1F>("h_ptRecoG2","ptRecoG2",200,0,200);
   h_ptRecoG3 = fs->make<TH1F>("h_ptRecoG3","ptRecoG3",200,0,200);
   h_ptRecoG4 = fs->make<TH1F>("h_ptRecoG4","ptRecoG4",200,0,200);
-  h_ptRecoPtGenG1 = fs->make<TH1F>("h_ptRecoPtGenG1","ptRecoPtGenG1",200,0,200);
-  h_ptRecoPtGenG2 = fs->make<TH1F>("h_ptRecoPtGenG2","ptRecoPtGenG2",200,0,200);
-  h_ptRecoPtGenG3 = fs->make<TH1F>("h_ptRecoPtGenG3","ptRecoPtGenG3",200,0,200);
-  h_ptRecoPtGenG4 = fs->make<TH1F>("h_ptRecoPtGenG4","ptRecoPtGenG4",200,0,200);
-  h_ptRecoPtGenVsPtGenG1 = fs->make<TH2F>("h_ptRecoPtGenVsPtGenG1","ptRecoPtGenVsPtGenG1",200,0,200,200,0,200);
-  h_ptRecoPtGenVsPtGenG2 = fs->make<TH2F>("h_ptRecoPtGenVsPtGenG2","ptRecoPtGenVsPtGenG2",200,0,200,200,0,200);
-  h_ptRecoPtGenVsPtGenG3 = fs->make<TH2F>("h_ptRecoPtGenVsPtGenG3","ptRecoPtGenVsPtGenG3",200,0,200,200,0,200);
-  h_ptRecoPtGenVsPtGenG4 = fs->make<TH2F>("h_ptRecoPtGenVsPtGenG4","ptRecoPtGenVsPtGenG4",200,0,200,200,0,200);
-  h_sumPtGammaDr03 = fs->make<TH1F>("h_sumPtGammaDr03","sumPtGammaDr03",200,0,200);
-  h_sumPtGammaDr04 = fs->make<TH1F>("h_sumPtGammaDr04","sumPtGammaDr04",200,0,200);
+  h_ptRecoPtGenG1 = fs->make<TH1F>("h_ptRecoPtGenG1","ptRecoPtGenG1",200,-10,10);
+  h_ptRecoPtGenG2 = fs->make<TH1F>("h_ptRecoPtGenG2","ptRecoPtGenG2",200,-10,10);
+  h_ptRecoPtGenG3 = fs->make<TH1F>("h_ptRecoPtGenG3","ptRecoPtGenG3",200,-10,10);
+  h_ptRecoPtGenG4 = fs->make<TH1F>("h_ptRecoPtGenG4","ptRecoPtGenG4",200,-10,10);
+  h_ptRecoPtGenVsPtGenG1 = fs->make<TH2F>("h_ptRecoPtGenVsPtGenG1","ptRecoPtGenVsPtGenG1",200,0,200,200,-10,10);
+  h_ptRecoPtGenVsPtGenG2 = fs->make<TH2F>("h_ptRecoPtGenVsPtGenG2","ptRecoPtGenVsPtGenG2",200,0,200,200,-10,10);
+  h_ptRecoPtGenVsPtGenG3 = fs->make<TH2F>("h_ptRecoPtGenVsPtGenG3","ptRecoPtGenVsPtGenG3",200,0,200,200,-10,10);
+  h_ptRecoPtGenVsPtGenG4 = fs->make<TH2F>("h_ptRecoPtGenVsPtGenG4","ptRecoPtGenVsPtGenG4",200,0,200,200,-10,10);
+  h_sumPtGammaDr05 = fs->make<TH1F>("h_sumPtGammaDr05","sumPtGammaDr05",1000,0,50);
+  h_sumPtGammaDr06 = fs->make<TH1F>("h_sumPtGammaDr06","sumPtGammaDr06",1000,0,50);
+  h_sumPtGammaDr07 = fs->make<TH1F>("h_sumPtGammaDr07","sumPtGammaDr07",1000,0,50);
+  h_sumPtGammaDr08 = fs->make<TH1F>("h_sumPtGammaDr08","sumPtGammaDr08",1000,0,50);
+  h_sumPtGammaDr09 = fs->make<TH1F>("h_sumPtGammaDr09","sumPtGammaDr09",1000,0,50);
+  h_sumPtGammaDr10 = fs->make<TH1F>("h_sumPtGammaDr10","sumPtGammaDr10",1000,0,50);
+  h_sumPtGammaDr11 = fs->make<TH1F>("h_sumPtGammaDr11","sumPtGammaDr11",1000,0,50);
 
 }
 

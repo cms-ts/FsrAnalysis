@@ -30,7 +30,9 @@ fsrValidation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
 
   bool Debug=false;
-
+  double cat1=0.05;
+  double cat2=2.0;
+  double cat3=0;
  
    ///////////////////////
    ///// Z Analysis
@@ -166,32 +168,69 @@ fsrValidation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	 h_ptGen3->Fill(e2_genS3.Pt());
 	 h_ptGen13->Fill(e1_genS3.Pt() - e1_gen.Pt());
 	 h_ptGen13->Fill(e2_genS3.Pt() - e2_gen.Pt());
-	 double sumPtG1 =0;
+	 double sumPtG1 =0, 
+	    sumPt05G1=0, sumPt06G1=0, sumPt07G1=0, sumPt08G1=0, sumPt09G1=0, sumPt10G1=0, sumPt11G1=0;
 	 for (vector<TLorentzVector>::const_iterator itG = gamma1_gen.begin(); itG != gamma1_gen.end(); itG++){
 	    sumPtG1=sumPtG1 + itG->Pt();
+	    if (distR((*itG),e1_reco)<0.05) sumPt05G1=sumPt05G1 + itG->Pt();
+	    if (distR((*itG),e1_reco)<0.06) sumPt06G1=sumPt06G1 + itG->Pt();
+	    if (distR((*itG),e1_reco)<0.07) sumPt07G1=sumPt07G1 + itG->Pt();
+	    if (distR((*itG),e1_reco)<0.08) sumPt08G1=sumPt08G1 + itG->Pt();
+	    if (distR((*itG),e1_reco)<0.09) sumPt09G1=sumPt09G1 + itG->Pt();
+	    if (distR((*itG),e1_reco)<0.10) sumPt10G1=sumPt10G1 + itG->Pt();
+	    if (distR((*itG),e1_reco)<0.11) sumPt11G1=sumPt11G1 + itG->Pt();
 	 }
-	 double sumPtG2 =0;
+	 double sumPtG2 =0, 
+	    sumPt05G2=0, sumPt06G2=0, sumPt07G2=0, sumPt08G2=0, sumPt09G2=0, sumPt10G2=0, sumPt11G2=0;
 	 for (vector<TLorentzVector>::const_iterator itG = gamma2_gen.begin(); itG != gamma2_gen.end(); itG++){
 	    sumPtG2=sumPtG2 + itG->Pt();
+	    if (distR((*itG),e2_reco)<0.05) sumPt05G2=sumPt05G2 + itG->Pt();
+	    if (distR((*itG),e2_reco)<0.06) sumPt06G2=sumPt06G2 + itG->Pt();
+	    if (distR((*itG),e2_reco)<0.07) sumPt07G2=sumPt07G2 + itG->Pt();
+	    if (distR((*itG),e2_reco)<0.08) sumPt08G2=sumPt08G2 + itG->Pt();
+	    if (distR((*itG),e2_reco)<0.09) sumPt09G2=sumPt09G2 + itG->Pt();
+	    if (distR((*itG),e2_reco)<0.10) sumPt10G2=sumPt10G2 + itG->Pt();
+	    if (distR((*itG),e2_reco)<0.11) sumPt11G2=sumPt11G2 + itG->Pt();
 	 }
 	 h_sumPtGamma->Fill(sumPtG1);
 	 h_sumPtGamma->Fill(sumPtG2);
+	 h_sumPtGammaDr05->Fill(sumPt05G1);
+	 h_sumPtGammaDr05->Fill(sumPt05G2);
+	 h_sumPtGammaDr06->Fill(sumPt06G1);
+	 h_sumPtGammaDr06->Fill(sumPt06G2);
+	 h_sumPtGammaDr07->Fill(sumPt07G1);
+	 h_sumPtGammaDr07->Fill(sumPt07G2);
+	 h_sumPtGammaDr08->Fill(sumPt08G1);
+	 h_sumPtGammaDr08->Fill(sumPt08G2);
+	 h_sumPtGammaDr09->Fill(sumPt09G1);
+	 h_sumPtGammaDr09->Fill(sumPt09G2);
+	 h_sumPtGammaDr10->Fill(sumPt10G1);
+	 h_sumPtGammaDr10->Fill(sumPt10G2);
+	 h_sumPtGammaDr11->Fill(sumPt11G1);
+	 h_sumPtGammaDr11->Fill(sumPt11G2);
 
- //  h_ptRecoG1;
-//   h_ptRecoG2;
-//   h_ptRecoG3;
-//   h_ptRecoG4;
-//   h_ptRecoPtGenG1;
-//   h_ptRecoPtGenG2;
-//   h_ptRecoPtGenG3;
-//   h_ptRecoPtGenG4;
-//   h_ptRecoPtGenVsPtGenG1;
-//   h_ptRecoPtGenVsPtGenG2;
-//   h_ptRecoPtGenVsPtGenG3;
-//   h_ptRecoPtGenVsPtGenG4;
-//   h_sumPtGammaDr03;
-//   h_sumPtGammaDr04;
-	 
+	 if (sumPtG1<cat1){	    
+	    h_ptRecoG1->Fill(e1_reco.Pt());
+	    h_ptRecoG1->Fill(e2_reco.Pt());
+	    h_ptRecoPtGenG1->Fill(e1_reco.Pt()-(e1_gen.Pt()+sumPtG1));
+	    h_ptRecoPtGenG1->Fill(e2_reco.Pt()-(e2_gen.Pt()+sumPtG2));
+	    h_ptRecoPtGenVsPtGenG1->Fill(e1_gen.Pt()+sumPtG1, e1_reco.Pt()-(e1_gen.Pt()+sumPtG1));
+	    h_ptRecoPtGenVsPtGenG1->Fill(e2_gen.Pt()+sumPtG2, e2_reco.Pt()-(e2_gen.Pt()+sumPtG2));
+	 } else if (sumPtG1< cat2){
+	    h_ptRecoG2->Fill(e1_reco.Pt());
+	    h_ptRecoG2->Fill(e2_reco.Pt());
+	    h_ptRecoPtGenG2->Fill(e1_reco.Pt()-(e1_gen.Pt()+sumPtG1));
+	    h_ptRecoPtGenG2->Fill(e2_reco.Pt()-(e2_gen.Pt()+sumPtG2));
+	    h_ptRecoPtGenVsPtGenG2->Fill(e1_gen.Pt()+sumPtG1, e1_reco.Pt()-(e1_gen.Pt()+sumPtG1));
+	    h_ptRecoPtGenVsPtGenG2->Fill(e2_gen.Pt()+sumPtG2, e2_reco.Pt()-(e2_gen.Pt()+sumPtG2));
+	 }else {	    
+	    h_ptRecoG3->Fill(e1_reco.Pt());
+	    h_ptRecoG3->Fill(e2_reco.Pt());
+	    h_ptRecoPtGenG3->Fill(e1_reco.Pt()-(e1_gen.Pt()+sumPtG1));
+	    h_ptRecoPtGenG3->Fill(e2_reco.Pt()-(e2_gen.Pt()+sumPtG2));
+	    h_ptRecoPtGenVsPtGenG3->Fill(e1_gen.Pt()+sumPtG1, e1_reco.Pt()-(e1_gen.Pt()+sumPtG1));
+	    h_ptRecoPtGenVsPtGenG3->Fill(e2_gen.Pt()+sumPtG2, e2_reco.Pt()-(e2_gen.Pt()+sumPtG2));
+	 }
       }
 
    } else if (Debug){std::cout << "WARNING: More than two electron selected"<< std::endl;}  
