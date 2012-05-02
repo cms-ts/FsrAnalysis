@@ -211,24 +211,29 @@ fsrValidation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
 	 if (sumPtG1<cat1){	    
 	    h_ptRecoG1->Fill(e1_reco.Pt());
-	    h_ptRecoG1->Fill(e2_reco.Pt());
 	    h_ptRecoPtGenG1->Fill(e1_reco.Pt()-(e1_gen.Pt()+sumPtG1));
-	    h_ptRecoPtGenG1->Fill(e2_reco.Pt()-(e2_gen.Pt()+sumPtG2));
 	    h_ptRecoPtGenVsPtGenG1->Fill(e1_gen.Pt()+sumPtG1, e1_reco.Pt()-(e1_gen.Pt()+sumPtG1));
-	    h_ptRecoPtGenVsPtGenG1->Fill(e2_gen.Pt()+sumPtG2, e2_reco.Pt()-(e2_gen.Pt()+sumPtG2));
 	 } else if (sumPtG1< cat2){
 	    h_ptRecoG2->Fill(e1_reco.Pt());
-	    h_ptRecoG2->Fill(e2_reco.Pt());
 	    h_ptRecoPtGenG2->Fill(e1_reco.Pt()-(e1_gen.Pt()+sumPtG1));
-	    h_ptRecoPtGenG2->Fill(e2_reco.Pt()-(e2_gen.Pt()+sumPtG2));
 	    h_ptRecoPtGenVsPtGenG2->Fill(e1_gen.Pt()+sumPtG1, e1_reco.Pt()-(e1_gen.Pt()+sumPtG1));
-	    h_ptRecoPtGenVsPtGenG2->Fill(e2_gen.Pt()+sumPtG2, e2_reco.Pt()-(e2_gen.Pt()+sumPtG2));
 	 }else {	    
 	    h_ptRecoG3->Fill(e1_reco.Pt());
-	    h_ptRecoG3->Fill(e2_reco.Pt());
 	    h_ptRecoPtGenG3->Fill(e1_reco.Pt()-(e1_gen.Pt()+sumPtG1));
-	    h_ptRecoPtGenG3->Fill(e2_reco.Pt()-(e2_gen.Pt()+sumPtG2));
 	    h_ptRecoPtGenVsPtGenG3->Fill(e1_gen.Pt()+sumPtG1, e1_reco.Pt()-(e1_gen.Pt()+sumPtG1));
+	 }
+
+	 if (sumPtG2<cat1){	    
+	    h_ptRecoG1->Fill(e2_reco.Pt());
+	    h_ptRecoPtGenG1->Fill(e2_reco.Pt()-(e2_gen.Pt()+sumPtG2));
+	    h_ptRecoPtGenVsPtGenG1->Fill(e2_gen.Pt()+sumPtG2, e2_reco.Pt()-(e2_gen.Pt()+sumPtG2));
+	 } else if (sumPtG2< cat2){
+	    h_ptRecoG2->Fill(e2_reco.Pt());
+	    h_ptRecoPtGenG2->Fill(e2_reco.Pt()-(e2_gen.Pt()+sumPtG2));
+	    h_ptRecoPtGenVsPtGenG2->Fill(e2_gen.Pt()+sumPtG2, e2_reco.Pt()-(e2_gen.Pt()+sumPtG2));
+	 }else {	    
+	    h_ptRecoG3->Fill(e2_reco.Pt());
+	    h_ptRecoPtGenG3->Fill(e2_reco.Pt()-(e2_gen.Pt()+sumPtG2));
 	    h_ptRecoPtGenVsPtGenG3->Fill(e2_gen.Pt()+sumPtG2, e2_reco.Pt()-(e2_gen.Pt()+sumPtG2));
 	 }
       }
