@@ -100,6 +100,10 @@ class fsrValidation : public edm::EDAnalyzer {
       std::vector<TLorentzVector> gamma1_gen, gamma2_gen;
 
       // histo initialization
+      TH1F * h_cosT_EG;
+      TH1F * h_cosT_EG1;
+      TH1F * h_cosT_EG2;
+      TH1F * h_cosT_EG3;
       TH1F * h_ptReco;
       TH1F * h_ptGen;
       TH1F * h_ptGen3;
@@ -124,7 +128,16 @@ class fsrValidation : public edm::EDAnalyzer {
       TH1F * h_sumPtGammaDr09;
       TH1F * h_sumPtGammaDr10;
       TH1F * h_sumPtGammaDr11;
-     
+      
+      TH2F * h_angleEnergy;
+      TH1F * h_iso;
+      TH2F * h_iso_fsr_Dr005;
+      TH2F * h_iso_fsr_Dr01;
+      TH2F * h_iso_fsr_Dr008;
+      TH2F * h_ptRecoPtGenG1_Iso;
+      TH2F * h_ptRecoPtGenG2_Iso;
+      TH2F * h_ptRecoPtGenG3_Iso;
+
 };
 
 fsrValidation::fsrValidation(const edm::ParameterSet& conf)
@@ -148,7 +161,11 @@ fsrValidation::fsrValidation(const edm::ParameterSet& conf)
   //cut from cfg 
   deltaConeGen        = conf.getParameter<double>("deltaRConeGen");
   deltaConeGenLoose   = conf.getParameter<double>("deltaRConeGenloose");
-  
+ 
+  h_cosT_EG = fs->make<TH1F>("h_cosT_EG","h_cosT_EG", 10, -1, 1);
+  h_cosT_EG1 = fs->make<TH1F>("h_cosT_EG1","h_cosT_EG1",  10, -1, 1);
+  h_cosT_EG2 = fs->make<TH1F>("h_cosT_EG2","h_cosT_EG2", 10, -1, 1);
+  h_cosT_EG3 = fs->make<TH1F>("h_cosT_EG3","h_cosT_EG3", 10, -1, 1);
   h_ptReco = fs->make<TH1F>("h_ptReco","ptReco",200,0,200);
   h_ptGen = fs->make<TH1F>("h_ptGen","ptGen",200,0,200);
   h_ptGen3 = fs->make<TH1F>("h_ptGen3","ptGen3",200,0,200);
@@ -162,6 +179,7 @@ fsrValidation::fsrValidation(const edm::ParameterSet& conf)
   h_ptRecoPtGenG2 = fs->make<TH1F>("h_ptRecoPtGenG2","ptRecoPtGenG2",200,-10,10);
   h_ptRecoPtGenG3 = fs->make<TH1F>("h_ptRecoPtGenG3","ptRecoPtGenG3",200,-10,10);
   h_ptRecoPtGenG4 = fs->make<TH1F>("h_ptRecoPtGenG4","ptRecoPtGenG4",200,-10,10);
+  h_angleEnergy = fs->make<TH2F>("h_angleEnergy", "h_angleEnergy", 10, 0.5, 1.5, 200, -2, 200);
   h_ptRecoPtGenVsPtGenG1 = fs->make<TH2F>("h_ptRecoPtGenVsPtGenG1","ptRecoPtGenVsPtGenG1",200,0,200,200,-10,10);
   h_ptRecoPtGenVsPtGenG2 = fs->make<TH2F>("h_ptRecoPtGenVsPtGenG2","ptRecoPtGenVsPtGenG2",200,0,200,200,-10,10);
   h_ptRecoPtGenVsPtGenG3 = fs->make<TH2F>("h_ptRecoPtGenVsPtGenG3","ptRecoPtGenVsPtGenG3",200,0,200,200,-10,10);
@@ -173,6 +191,15 @@ fsrValidation::fsrValidation(const edm::ParameterSet& conf)
   h_sumPtGammaDr09 = fs->make<TH1F>("h_sumPtGammaDr09","sumPtGammaDr09",1000,0,50);
   h_sumPtGammaDr10 = fs->make<TH1F>("h_sumPtGammaDr10","sumPtGammaDr10",1000,0,50);
   h_sumPtGammaDr11 = fs->make<TH1F>("h_sumPtGammaDr11","sumPtGammaDr11",1000,0,50);
+  
+  h_iso= fs->make<TH1F>("h_iso","h_iso", 50,0,1);
+  h_iso_fsr_Dr005= fs->make<TH2F>("h_iso_fsr_Dr005","h_iso_fsr_Dr005",100,0,50, 50, 0, 1);
+  h_iso_fsr_Dr01= fs->make<TH2F>("h_iso_fsr_Dr01","h_iso_fsr_Dr01",100,0, 50, 50, 0, 1);
+  h_iso_fsr_Dr008= fs->make<TH2F>("h_iso_fsr_Dr008","h_iso_fsr_Dr008",100,0,50, 50, 0, 1);
+  h_ptRecoPtGenG1_Iso = fs->make<TH2F>("h_ptRecoPtGenG1_Iso","h_ptRecoPtGenG1_Iso",200,-10,10, 50, 0, 1);
+  h_ptRecoPtGenG2_Iso = fs->make<TH2F>("h_ptRecoPtGenG1_Iso","h_ptRecoPtGenG1_Iso",200,0,10, 50, 0, 1);
+  h_ptRecoPtGenG3_Iso = fs->make<TH2F>("h_ptRecoPtGenG1_Iso","h_ptRecoPtGenG1_Iso",200,0,10, 50, 0, 1);
+
 
 }
 

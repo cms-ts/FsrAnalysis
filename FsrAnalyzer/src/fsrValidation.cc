@@ -32,7 +32,6 @@ fsrValidation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   bool Debug=false;
   double cat1=0.05;
   double cat2=2.0;
-  double cat3=0;
  
    ///////////////////////
    ///// Z Analysis
@@ -70,18 +69,25 @@ fsrValidation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
       //TLorentz vector of the two Z boson electrons, at RECO level
       TLorentzVector e1_reco, e2_reco;
-      
+      double iso_e1, iso_e2;
+
       if (!usingPF){     
 	 reco::GsfElectronCollection::const_iterator it=goodEPair->begin();     
 	 e1_reco.SetPtEtaPhiM(it->pt(),it->eta(),it->phi(),it->mass());
+	 iso_e1 = it->pfIsolationVariables().photonIso;	 
 	 it++;
 	 e2_reco.SetPtEtaPhiM(it->pt(),it->eta(),it->phi(),it->mass());
+	 iso_e2 = it->pfIsolationVariables().photonIso;	 
+	 
       }
       else {     
 	 reco::PFCandidateCollection::const_iterator it=goodPfEPair->begin();     
 	 e1_reco.SetPtEtaPhiM(it->pt(),it->eta(),it->phi(),it->mass());
+	 iso_e1 = it->pfIsolationVariables().photonIso;	 
 	 it++;
 	 e2_reco.SetPtEtaPhiM(it->pt(),it->eta(),it->phi(),it->mass());
+	 iso_e2 = it->pfIsolationVariables().photonIso;	 
+
       }     
       if (usingMC){
 	 reco::GenParticleCollection::const_iterator it_e1_gen;
@@ -95,8 +101,10 @@ fsrValidation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	       if (isRightEle){
 		  TLorentzVector e_gen;
 		  e_gen.SetPtEtaPhiM(itgen->pt(),itgen->eta(),itgen->phi(),itgen->mass());
+		  
 		  double deltaR1= distR(e_gen,e1_reco);
 		  double deltaR2= distR(e_gen,e2_reco);	
+
 		  if (deltaR1 < deltaConeGen ){
 		     e1_gen = e_gen;
 		     it_e1_gen= itgen;
@@ -168,10 +176,14 @@ fsrValidation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	 h_ptGen3->Fill(e2_genS3.Pt());
 	 h_ptGen13->Fill(e1_genS3.Pt() - e1_gen.Pt());
 	 h_ptGen13->Fill(e2_genS3.Pt() - e2_gen.Pt());
-	 double sumPtG1 =0, 
-	    sumPt05G1=0, sumPt06G1=0, sumPt07G1=0, sumPt08G1=0, sumPt09G1=0, sumPt10G1=0, sumPt11G1=0;
+	 double sumPtG1 =0;
+	 double eta_g = 0;	
+	 double sumPt05G1=0, sumPt06G1=0, sumPt07G1=0, sumPt08G1=0, sumPt09G1=0, sumPt10G1=0, sumPt11G1=0;
 	 for (vector<TLorentzVector>::const_iterator itG = gamma1_gen.begin(); itG != gamma1_gen.end(); itG++){
-	    sumPtG1=sumPtG1 + itG->Pt();
+	     
+	     sumPtG1=sumPtG1 + itG->Pt();
+	     eta_g = itG->Eta();
+	    
 	    if (distR((*itG),e1_reco)<0.05) sumPt05G1=sumPt05G1 + itG->Pt();
 	    if (distR((*itG),e1_reco)<0.06) sumPt06G1=sumPt06G1 + itG->Pt();
 	    if (distR((*itG),e1_reco)<0.07) sumPt07G1=sumPt07G1 + itG->Pt();
@@ -179,6 +191,11 @@ fsrValidation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	    if (distR((*itG),e1_reco)<0.09) sumPt09G1=sumPt09G1 + itG->Pt();
 	    if (distR((*itG),e1_reco)<0.10) sumPt10G1=sumPt10G1 + itG->Pt();
 	    if (distR((*itG),e1_reco)<0.11) sumPt11G1=sumPt11G1 + itG->Pt();
+	    
+	    if (distR((*itG),e1_reco)>0.08) h_iso_fsr_Dr008 -> Fill(sumPtG1, iso_e1);
+	    if (distR((*itG),e1_reco)>0.05) h_iso_fsr_Dr005 -> Fill(sumPtG1, iso_e1);
+	    if (distR((*itG),e1_reco)>0.1)  h_iso_fsr_Dr01 -> Fill(sumPtG1, iso_e1);
+
 	 }
 	 double sumPtG2 =0, 
 	    sumPt05G2=0, sumPt06G2=0, sumPt07G2=0, sumPt08G2=0, sumPt09G2=0, sumPt10G2=0, sumPt11G2=0;
@@ -191,7 +208,15 @@ fsrValidation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	    if (distR((*itG),e2_reco)<0.09) sumPt09G2=sumPt09G2 + itG->Pt();
 	    if (distR((*itG),e2_reco)<0.10) sumPt10G2=sumPt10G2 + itG->Pt();
 	    if (distR((*itG),e2_reco)<0.11) sumPt11G2=sumPt11G2 + itG->Pt();
+
+	    if (distR((*itG),e1_reco)>0.08) h_iso_fsr_Dr008 -> Fill(sumPtG2, iso_e2);
+	    if (distR((*itG),e1_reco)>0.05) h_iso_fsr_Dr005 -> Fill(sumPtG2, iso_e2);
+	    if (distR((*itG),e1_reco)>0.1)  h_iso_fsr_Dr01   -> Fill(sumPtG2, iso_e2);
+
 	 }
+	
+	 h_iso -> Fill(iso_e1);
+	 h_iso -> Fill(iso_e2);
 	 h_sumPtGamma->Fill(sumPtG1);
 	 h_sumPtGamma->Fill(sumPtG2);
 	 h_sumPtGammaDr05->Fill(sumPt05G1);
@@ -209,32 +234,60 @@ fsrValidation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	 h_sumPtGammaDr11->Fill(sumPt11G1);
 	 h_sumPtGammaDr11->Fill(sumPt11G2);
 
-	 if (sumPtG1<cat1){	    
-	    h_ptRecoG1->Fill(e1_reco.Pt());
-	    h_ptRecoPtGenG1->Fill(e1_reco.Pt()-(e1_gen.Pt()+sumPtG1));
+	 double cosT_e = -2 * TMath::ATan(-TMath::Exp((e1_gen.Eta())));
+	 double cosT_g = -2 * TMath::ATan(-TMath::Exp((eta_g)));
+	 double cosT   = TMath::Cos((cosT_e - cosT_g));
+
+	 h_cosT_EG -> Fill(cosT);
+	 h_angleEnergy -> Fill(cosT, sumPtG1);
+
+	 if (sumPtG1<cat1){
+     	   
+	    h_cosT_EG1->Fill(cosT);		 
+	    h_ptRecoG1->Fill(e1_reco.Pt()); 
+	    if(distR((*itG),e1_reco)<0.08){
+		    h_ptRecoPtGenG1->Fill(e1_reco.Pt()-(e1_gen.Pt()+sumPtG1));
+	            h_ptRecoPtGenG1_Iso->Fill(e1_reco.Pt()-(e1_gen.Pt()+sumPtG1), iso_e1);
+	    }
 	    h_ptRecoPtGenVsPtGenG1->Fill(e1_gen.Pt()+sumPtG1, e1_reco.Pt()-(e1_gen.Pt()+sumPtG1));
+	
 	 } else if (sumPtG1< cat2){
+     	
+	    h_cosT_EG2->Fill(cosT);		 
 	    h_ptRecoG2->Fill(e1_reco.Pt());
-	    h_ptRecoPtGenG2->Fill(e1_reco.Pt()-(e1_gen.Pt()+sumPtG1));
+	    if(distR((*itG),e1_reco)<0.08) h_ptRecoPtGenG2->Fill(e1_reco.Pt()-(e1_gen.Pt()+sumPtG1));
 	    h_ptRecoPtGenVsPtGenG2->Fill(e1_gen.Pt()+sumPtG1, e1_reco.Pt()-(e1_gen.Pt()+sumPtG1));
-	 }else {	    
+	    if(distR((*itG),e1_reco)<0.08) h_ptRecoPtGenG2_Iso->Fill(e1_reco.Pt()-(e1_gen.Pt()+sumPtG1), iso_e1);
+
+	 
+	 }else {
+	 
+            h_cosT_EG3->Fill(cosT);
 	    h_ptRecoG3->Fill(e1_reco.Pt());
-	    h_ptRecoPtGenG3->Fill(e1_reco.Pt()-(e1_gen.Pt()+sumPtG1));
+	    if(distR((*itG),e1_reco)<0.08) h_ptRecoPtGenG3->Fill(e1_reco.Pt()-(e1_gen.Pt()+sumPtG1));
 	    h_ptRecoPtGenVsPtGenG3->Fill(e1_gen.Pt()+sumPtG1, e1_reco.Pt()-(e1_gen.Pt()+sumPtG1));
+	    if(distR((*itG),e1_reco)<0.08) h_ptRecoPtGenG3_Iso->Fill(e1_reco.Pt()-(e1_gen.Pt()+sumPtG1), iso_e1);
+
 	 }
 
 	 if (sumPtG2<cat1){	    
 	    h_ptRecoG1->Fill(e2_reco.Pt());
-	    h_ptRecoPtGenG1->Fill(e2_reco.Pt()-(e2_gen.Pt()+sumPtG2));
+	    if(distR((*itG),e2_reco)<0.08) h_ptRecoPtGenG1->Fill(e2_reco.Pt()-(e2_gen.Pt()+sumPtG2));
 	    h_ptRecoPtGenVsPtGenG1->Fill(e2_gen.Pt()+sumPtG2, e2_reco.Pt()-(e2_gen.Pt()+sumPtG2));
+	    if(distR((*itG),e1_reco)<0.08) h_ptRecoPtGenG1_Iso->Fill(e2_reco.Pt()-(e2_gen.Pt()+sumPtG2), iso_e2);
+
 	 } else if (sumPtG2< cat2){
 	    h_ptRecoG2->Fill(e2_reco.Pt());
-	    h_ptRecoPtGenG2->Fill(e2_reco.Pt()-(e2_gen.Pt()+sumPtG2));
+	    if(distR((*itG),e2_reco)<0.08) h_ptRecoPtGenG2->Fill(e2_reco.Pt()-(e2_gen.Pt()+sumPtG2));
 	    h_ptRecoPtGenVsPtGenG2->Fill(e2_gen.Pt()+sumPtG2, e2_reco.Pt()-(e2_gen.Pt()+sumPtG2));
+	    if(distR((*itG),e1_reco)<0.08) h_ptRecoPtGenG2_Iso->Fill(e2_reco.Pt()-(e2_gen.Pt()+sumPtG2), iso_e2);
+
 	 }else {	    
 	    h_ptRecoG3->Fill(e2_reco.Pt());
-	    h_ptRecoPtGenG3->Fill(e2_reco.Pt()-(e2_gen.Pt()+sumPtG2));
+	    if(distR((*itG),e2_reco)<0.08) h_ptRecoPtGenG3->Fill(e2_reco.Pt()-(e2_gen.Pt()+sumPtG2));
 	    h_ptRecoPtGenVsPtGenG3->Fill(e2_gen.Pt()+sumPtG2, e2_reco.Pt()-(e2_gen.Pt()+sumPtG2));
+	    if(distR((*itG),e1_reco)<0.08) h_ptRecoPtGenG3_Iso->Fill(e2_reco.Pt()-(e2_gen.Pt()+sumPtG2), iso_e2);
+
 	 }
       }
 
