@@ -1,4 +1,4 @@
-#include "Histo/HistoAnalyzer/interface/FSRAnalyzer_PU.h"
+#include "Fsr/FsrAnalyzer/interface/FSRAnalyzer_PU.h"
 
 using namespace std;
 using namespace edm;
